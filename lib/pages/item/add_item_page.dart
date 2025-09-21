@@ -16,10 +16,10 @@ class AddItemPage extends StatefulWidget {
 }
 
 class AddItemPageState extends State<AddItemPage> {
-  final _nameCtrl    = TextEditingController();
-  final _titleCtrl   = TextEditingController();
-  final _descCtrl    = TextEditingController();
-  final _priceCtrl   = TextEditingController();
+  final _nameCtrl = TextEditingController();
+  final _titleCtrl = TextEditingController();
+  final _descCtrl = TextEditingController();
+  final _priceCtrl = TextEditingController();
   final _contactCtrl = TextEditingController();
   File? _image;
   final picker = ImagePicker();
@@ -43,12 +43,12 @@ class AddItemPageState extends State<AddItemPage> {
     final svc = Provider.of<SupabaseService>(context, listen: false);
 
     await svc.addItem(
-      title:        _titleCtrl.text.trim(),
-      desc:         _descCtrl.text.trim(),
-      price:        double.tryParse(_priceCtrl.text) ?? 0,
-      contact:      _contactCtrl.text.trim(),
+      title: _titleCtrl.text.trim(),
+      desc: _descCtrl.text.trim(),
+      price: double.tryParse(_priceCtrl.text) ?? 0,
+      contact: _contactCtrl.text.trim(),
       uploaderName: _nameCtrl.text.trim(),
-      image:        _image!,
+      image: _image!,
     );
 
     setState(() => _uploading = false);
@@ -68,7 +68,7 @@ class AddItemPageState extends State<AddItemPage> {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF7209B7), Color(0xFFFF006E)],
+          colors: [Color(0xFF003366), Color(0xFF144D73)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -77,18 +77,19 @@ class AddItemPageState extends State<AddItemPage> {
         backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
         extendBody: true,
-
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(
-            '✨ Add Your Thrift',
-            style: GoogleFonts.poppins(
-                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+            'Add Your Thrift Item',
+            style: GoogleFonts.montserrat(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
           ),
           centerTitle: true,
         ),
-
         body: SafeArea(
           bottom: false,
           child: SingleChildScrollView(
@@ -96,7 +97,7 @@ class AddItemPageState extends State<AddItemPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Title field
+
                 CustomInputField(
                   controller: _titleCtrl,
                   label: 'Item Title',
@@ -104,7 +105,7 @@ class AddItemPageState extends State<AddItemPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // Description
+
                 CustomInputField(
                   controller: _descCtrl,
                   label: 'Description',
@@ -113,7 +114,7 @@ class AddItemPageState extends State<AddItemPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // Price
+
                 CustomInputField(
                   controller: _priceCtrl,
                   label: 'Price (Php)',
@@ -122,7 +123,7 @@ class AddItemPageState extends State<AddItemPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // Name
+
                 CustomInputField(
                   controller: _nameCtrl,
                   label: 'Your Display Name',
@@ -130,7 +131,7 @@ class AddItemPageState extends State<AddItemPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // Contact
+
                 CustomInputField(
                   controller: _contactCtrl,
                   label: 'Contact Email',
@@ -138,17 +139,20 @@ class AddItemPageState extends State<AddItemPage> {
                 ),
                 const SizedBox(height: 24),
 
-                // Image picker
+
                 _image == null
                     ? ElevatedButton.icon(
-                  icon: const Icon(Icons.photo_library, size: 24),
+                  icon: const Icon(Icons.add_a_photo, size: 24),
                   label: Text(
                     'Choose Photo',
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    style: GoogleFonts.lato(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white.withOpacity(0.9),
-                    foregroundColor: Colors.deepPurple,
+                    backgroundColor: const Color(0xFF5AB69F),
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -160,14 +164,21 @@ class AddItemPageState extends State<AddItemPage> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.file(_image!, height: 180, fit: BoxFit.cover),
+                      child: Image.file(
+                        _image!,
+                        height: 180,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     TextButton(
                       onPressed: () => setState(() => _image = null),
                       child: Text(
                         'Re-pick Image',
-                        style: GoogleFonts.poppins(color: Colors.white70),
+                        style: GoogleFonts.lato(
+                          color: const Color(0xFFC7E6DE),
+                        ),
                       ),
                     ),
                   ],
@@ -175,12 +186,16 @@ class AddItemPageState extends State<AddItemPage> {
 
                 const SizedBox(height: 24),
 
-                // Upload button
+
                 ElevatedButton(
                   onPressed: canUpload ? _handleUpload : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepPurple,
+                    backgroundColor: const Color(0xFFE4F0F3),
+                    foregroundColor: const Color(0xFF144D73),
+                    disabledBackgroundColor:
+                    const Color(0xFFE4F0F3).withOpacity(0.5),
+                    disabledForegroundColor:
+                    const Color(0xFF144D73).withOpacity(0.5),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -191,12 +206,15 @@ class AddItemPageState extends State<AddItemPage> {
                       ? const SizedBox(
                     width: 24,
                     height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Color(0xFF144D73),
+                    ),
                   )
                       : Text(
                     'Upload Item',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
+                    style: GoogleFonts.lato(
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

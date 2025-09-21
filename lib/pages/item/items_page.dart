@@ -36,14 +36,14 @@ class ItemsPageState extends State<ItemsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final svc          = Provider.of<SupabaseService>(context, listen: false);
+    final svc = Provider.of<SupabaseService>(context, listen: false);
     final currentEmail = Supabase.instance.client.auth.currentUser?.email;
 
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF3A0CA3), Color(0xFFF72585)],
+            colors: [Color(0xFF003366), Color(0xFF144D73)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -52,12 +52,13 @@ class ItemsPageState extends State<ItemsPage> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: Row(
                   children: [
                     Text(
-                      '🛍️ Thrift Store',
-                      style: GoogleFonts.poppins(
+                      '🏪 C Thrift Store',
+                      style: GoogleFonts.montserrat(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -65,35 +66,37 @@ class ItemsPageState extends State<ItemsPage> {
                     ),
                     const Spacer(),
                     IconButton(
-                      icon: const Icon(Icons.logout, color: Colors.white),
+                      icon: const Icon(Icons.logout, color: Color(0xFFC7E6DE)),
                       onPressed: () async {
                         await svc.signOut();
-                        Navigator.of(context)
-                            .pushNamedAndRemoveUntil('/signin', (_) => false);
+                        if (mounted) {
+                          Navigator.of(context)
+                              .pushNamedAndRemoveUntil('/signin', (_) => false);
+                        }
                       },
                     ),
                   ],
                 ),
               ),
-
-              // Content grid
               Expanded(
                 child: RefreshIndicator(
-                  color: Colors.white,
+                  color: const Color(0xFF5AB69F),
                   onRefresh: _refresh,
                   child: FutureBuilder<List<Item>>(
                     future: _fetchFuture,
                     builder: (context, snap) {
                       if (snap.connectionState != ConnectionState.done) {
                         return const Center(
-                          child: CircularProgressIndicator(color: Colors.white),
+                          child: CircularProgressIndicator(
+                              color: Color(0xFFC7E6DE)),
                         );
                       }
                       if (snap.hasError) {
                         return Center(
                           child: Text(
                             'Oops! ${snap.error}',
-                            style: GoogleFonts.poppins(color: Colors.redAccent),
+                            style:
+                            GoogleFonts.montserrat(color: Colors.redAccent),
                           ),
                         );
                       }
@@ -102,8 +105,8 @@ class ItemsPageState extends State<ItemsPage> {
                         return Center(
                           child: Text(
                             'No treasures yet 🧐',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white70,
+                            style: GoogleFonts.lato(
+                              color: const Color(0xFFC7E6DE).withOpacity(0.8),
                               fontSize: 18,
                             ),
                           ),
@@ -121,7 +124,7 @@ class ItemsPageState extends State<ItemsPage> {
                         ),
                         itemCount: items.length,
                         itemBuilder: (context, i) {
-                          final item    = items[i];
+                          final item = items[i];
                           final isOwner = item.uploaderEmail == currentEmail;
 
                           return Container(
@@ -139,41 +142,42 @@ class ItemsPageState extends State<ItemsPage> {
                             clipBehavior: Clip.antiAlias,
                             child: Column(
                               children: [
-                                // Image
                                 Expanded(
-                                  child: Stack(
-                                    children: [
-                                      Positioned.fill(
-                                        child: Image.network(
-                                          item.imageUrl,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      if (isOwner)
-                                        Positioned(
-                                          top: 8,
-                                          right: 8,
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              color: Colors.black38,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: IconButton(
-                                              icon: const Icon(
-                                                  Icons.delete, size: 20),
-                                              color: Colors.white,
-                                              onPressed: () async {
-                                                await svc.deleteItem(item.id);
-                                                await _refresh();
-                                              },
-                                            ),
+                                  child: Hero(
+                                    tag: 'item-image-${item.id}',
+                                    child: Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          child: Image.network(
+                                            item.imageUrl,
+                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                    ],
+                                        if (isOwner)
+                                          Positioned(
+                                            top: 8,
+                                            right: 8,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xFF003366)
+                                                    .withOpacity(0.7),
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: IconButton(
+                                                icon: const Icon(Icons.delete,
+                                                    size: 20),
+                                                color: const Color(0xFFE4F0F3),
+                                                onPressed: () async {
+                                                  await svc.deleteItem(item.id);
+                                                  await _refresh();
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-
-                                // Details section
                                 Padding(
                                   padding: const EdgeInsets.all(12),
                                   child: Column(
@@ -184,17 +188,18 @@ class ItemsPageState extends State<ItemsPage> {
                                         item.title,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.poppins(
+                                        style: GoogleFonts.montserrat(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
+                                          color: const Color(0xFF003366),
                                         ),
                                       ),
                                       const SizedBox(height: 6),
                                       Text(
-                                        'Php ${item.price.toStringAsFixed(2)}',
-                                        style: GoogleFonts.poppins(
+                                        '₱ ${item.price.toStringAsFixed(2)}',
+                                        style: GoogleFonts.lato(
                                           fontSize: 14,
-                                          color: const Color(0xFF7209B7),
+                                          color: const Color(0xFF5AB69F),
                                         ),
                                       ),
                                       const SizedBox(height: 6),
@@ -202,9 +207,9 @@ class ItemsPageState extends State<ItemsPage> {
                                         'By ${item.uploadedBy}',
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
-                                        style: GoogleFonts.poppins(
+                                        style: GoogleFonts.lato(
                                           fontSize: 12,
-                                          color: Colors.grey[600],
+                                          color: const Color(0xFF144D73),
                                         ),
                                       ),
                                       const SizedBox(height: 8),
@@ -213,9 +218,10 @@ class ItemsPageState extends State<ItemsPage> {
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor:
-                                            const Color(0xFFF72585),
-                                            padding:
-                                            const EdgeInsets.symmetric(
+                                            const Color(0xFF144D73),
+                                            foregroundColor:
+                                            const Color(0xFFE4F0F3),
+                                            padding: const EdgeInsets.symmetric(
                                                 vertical: 10),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
@@ -231,8 +237,8 @@ class ItemsPageState extends State<ItemsPage> {
                                           },
                                           child: Text(
                                             'Details',
-                                            style: GoogleFonts.poppins(
-                                                color: Colors.white),
+                                            style: GoogleFonts.lato(
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ),
                                       ),
@@ -248,17 +254,16 @@ class ItemsPageState extends State<ItemsPage> {
                   ),
                 ),
               ),
-
-              // Add New button
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: FloatingActionButton.extended(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF3A0CA3),
+                  backgroundColor: const Color(0xFF5AB69F),
+                  foregroundColor: const Color(0xFF003366),
                   icon: const Icon(Icons.add),
                   label: Text(
                     'Add New',
-                    style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    style:
+                    GoogleFonts.montserrat(fontWeight: FontWeight.w600),
                   ),
                   onPressed: () async {
                     await Navigator.pushNamed(context, '/add');

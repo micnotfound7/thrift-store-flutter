@@ -36,8 +36,8 @@ class _SignInPageState extends State<SignInPage> {
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Color(0xFFF72585), // vibrant pink
-                        Color(0xFF3A0CA3), // deep purple
+                        Color(0xFF253AF7), // vibrant pink
+                        Color(0xFFE3E1E8), // deep purple
                       ],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
@@ -48,7 +48,7 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                   ),
                   child: Text(
-                    '🛍️ Thrift Store',
+                    ' 🏪 Cabual Store',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.montserrat(
                       fontSize: 32,
